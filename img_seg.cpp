@@ -84,25 +84,37 @@ double getTime()
 	      	}
 }
 
-int main(int argc,char **argv)
+int main()
 {
-	int width,height;
-	int pixelWidth;
-	int Threshold = 3;
-	int numThreads = 4;
-	int seed =1 ;
-	const char *filename = "input.png";
-	const char *outputname = "output.png";
-  	for(int ac=1;ac<argc;ac++)
+	int wid,hgt,pixel_wid,thresh=3,n_threads=1,seed=1;
+	const char *filename = "i.png";
+	const char *outputname = "o.png";
+
+	unsigned char *data = stbi_load(filename, &wid, &hgt, &pixel_wid,0); //To load image
+	int *labels = (int *)malloc(sizeof(int)*wid*hgt); //Creating labels and segment data
+	unsigned char *seg_data = (unsigned char*)malloc(sizeof(unsigned char)*wid*hgt*3);
+
+	double strt = getTime(); 
+
+	for(int i=0;i<hgt;i++)
 	{
-	    if(MATCH("-s")) {Threshold = atoi(argv[++ac]);}
-	    else if(MATCH("-t")) {numThreads = atoi(argv[++ac]);}
-	    else if(MATCH("-i"))  {filename = argv[++ac];}
-	    else if(MATCH("-o"))  {outputname = argv[++ac];}
-	    else {
-	      printf("Usage: %s [-i < filename>] [-s <threshold>] [-t <numThreads>] [-o outputfilename]\n",argv[0]);
-	      return(-1);
-	    }
+	for(int j=0;j<wid;j++)
+	{
+	int idx = (i*wid)+j;
+	int indx3= (idx*pixel_wid);
+
+	labels[idx]=0;
+
+	labels[idx] = idx + 1;
 	}
-  return 0;
-  }
+	}
+
+	img_seg(labels,data,wid,hgt,pixel_wid,n_threads,thresh);
+
+	double stop = getTime();
+
+	double segtime = stop - strt;
+	printf("%d", segtime);
+
+
+}
