@@ -1,16 +1,25 @@
-#include <stdio.h>
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#include <algorithm>
-#include <sys/time.h>
-#include <omp.h>
-#include <unordered_map>
+#include<stdio.h>
+#include "std_image.h"
+#include<sys/time.h>
+#include<omp.h>
 
 using namespace std;
 
-#define MATCH(s) (!strcmp(argv[ac], (s)))
+static const double k = 1.0e-6;
+double getTime()
+{
+	struct timeval tval;
+	struct timezone tzone;
 
-static const double kMicro = 1.0e-6;
+	const int RC = gettimeofday(&tval, &tzone);
+	if(RC==-1)
+	{
+	return(-1);
+	}
+	else
+	return (((double)tval.tval_sec + k * ((double)tval.tval_usec));
+
+}
 
 int main(int argc,char **argv)
 {
